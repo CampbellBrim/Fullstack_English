@@ -1,0 +1,11 @@
+/*  */
+
+.parent {
+  text-align: center;
+  /* color: red; */
+  /* background-color: red; */
+}
+
+.parent h1 {
+  color: blue;
+}

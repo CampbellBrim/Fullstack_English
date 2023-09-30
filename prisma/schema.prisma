@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  email    String @unique
+  userName String @unique
+  role     Role   @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lessonPlans LessonPlan[]
+  lessons     Lesson[]
+}
+
+enum Role {
+  USER
+  CREATOR
+  ADMIN
+}
+
+model LessonPlan {
+  id          String   @id @default(uuid())
+  title       String
+  level       String
+  description String   @default("an english lesson")
+  lessons     Lesson[]
+  // description String   @default("an english lesson")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    String
+}
+
+// improve data model
+model Lesson {
+  id                String      @id @default(uuid())
+  title             String
+  content           Page[]
+  learningObjective String      @default("learn verbs, nouns, adjectives, etc.")
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  author            User        @relation(fields: [authorId], references: [id])
+  authorId          String
+  LessonPlan        LessonPlan? @relation(fields: [lessonPlanId], references: [id])
+  lessonPlanId      String?
+}
+
+model Page {
+  id        String   @id @default(uuid())
+  title     String
+  content   Json[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+  lessonId  String
+}
