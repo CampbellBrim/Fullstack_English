@@ -21,8 +21,8 @@ export default async function Page() {
   //   id: string;
   return (
     <div className="flex flex-col">
-      {users.users.map((user: any) => {
-        return <Users userName={user.userName} id={user.id} />;
+      {users.users.map((user: any, index: number) => {
+        return <Users key={index} userName={user.userName} id={user.id} />;
       })}
     </div>
   );
