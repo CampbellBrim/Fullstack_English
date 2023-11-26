@@ -6,9 +6,9 @@ import {useRouter, usePathname} from "next/navigation";
 export default function CreateAll() {
   // const planLessonPage = useGeneralStore((state) => state.planLessonPage);
   const router = useRouter();
+  const url = usePathname();
 
   const getLastSegmentUrl = () => {
-    const url = usePathname();
     const lastSegment = url.split("/").pop();
     return lastSegment;
   };
