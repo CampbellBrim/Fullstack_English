@@ -2,8 +2,8 @@ import Link from "next/link";
 
 export default async function Page() {
   return (
-    <div>
-      <h1>Update Or Delete Lesson Plans, Lessons or Pages</h1>;
+    <div className="prose">
+      <h1>Update Or Delete Lesson Plans, Lessons or Pages</h1>
       <div>
         <ul>
           <li>

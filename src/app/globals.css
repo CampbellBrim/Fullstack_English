@@ -1,39 +1,121 @@
-/* @tailwind base; */
-/* @tailwind components; */
-/* @tailwind utilities; */
-
-* {
-  box-sizing: border-box;
-  /* font-size: x-large; */
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 body {
   margin: 0;
   padding: 0;
+  height: 100vh;
 }
 
 .Form {
-  margin: 5px;
   border: solid 2px black;
+  border-radius: 15px;
+  width: fit-content;
 }
 
-.Form input {
-  margin: 5px;
-  border: solid 2px blue;
+.alignSelfCenter {
+  align-self: center;
 }
 
-.button {
-  margin: 5px;
-  padding: 7px;
-  border-radius: 10px;
-  border: solid 2px gray;
-  /* background-color: green; */
+.alignItemsCenter {
+  align-items: center;
+}
+.alignItemsLeft {
+  align-items: baseline;
 }
 
-.primary {
-  background-color: rgb(137, 137, 235);
+.center {
+  justify-content: center;
+  align-items: center;
 }
 
-.warning {
-  background-color: red;
+.capitalizeFirst {
+  text-transform: capitalize;
+}
+
+.marginBottom-7 {
+  margin-bottom: 7px;
+}
+
+.loadingPosition {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.draggable-list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 0;
+}
+
+.draggable-list li {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: move;
+}
+
+.draggable-list li:hover {
+  background-color: #e9e9e9;
+}
+
+.draggable-list li:active {
+  background-color: #ddd;
+}
+
+.textInputBorder {
+  border: solid 2px black;
+  border-radius: 15px;
+}
+
+.scroll {
+  overflow-y: scroll;
+  height: 400px;
+}
+
+.change {
+  display: none;
+}
+.containerDis:hover + .change {
+  display: block;
+  color: blue;
+  font-size: 20px;
+}
+
+.hoverBorder:hover {
+  border: 2px solid gray;
+  border-radius: 15px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.colorWhite {
+  color: white;
+}
+.colorBlack {
+  color: black;
+}
+
+.minHeight-90vh {
+  min-height: 90vh;
+}
+
+.customCard {
+  border-radius: 15px;
+}
+
+.no-tailwind {
+  all: unset;
+}
+
+.height519 {
+  height: 519px;
+}
+
+.height440 {
+  height: 440px;
 }

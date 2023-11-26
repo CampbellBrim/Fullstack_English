@@ -1,38 +1,46 @@
 import prisma from "../../../../prisma/db";
-// import {NextApiResponse, NextApiRequest} from "next";
 import {NextRequest, NextResponse} from "next/server";
+import {revalidatePath, revalidateTag} from "next/cache";
 
 export async function POST(req: NextRequest, res: NextResponse) {
-  const {title, authorId} = await req.json();
+  const {title, authorId, learningObjective, lessonPlan} = await req.json();
 
   const page = await prisma.lesson.create({
     data: {
       title: title,
+      learningObjective: learningObjective,
       author: {
         connect: {
-          id: authorId,
+          id: process.env.AUTHOR_ID,
+        },
+      },
+      LessonPlan: {
+        connect: {
+          id: lessonPlan,
         },
       },
     },
   });
+  revalidatePath("/courses/", "layout");
   return NextResponse.json({page});
 }
 
-// update list of lessons
-// export async function PUT(req: NextRequest, res: NextResponse) {
-//   const {id, title} = await req.json();
-//   // const { id, title, content } = await req.json();
-//   const page = await prisma.page.update({
-//     where: {
-//       id: id,
-//     },
-//     data: {
-//       title: title,
-//       // content: content,
-//     },
-//   });
-//   return NextResponse.json({page});
-// }
+export async function PUT(req: NextRequest, res: NextResponse) {
+  const {id, title, learningObjective} = await req.json();
+  // const { id, title, content } = await req.json();
+  const page = await prisma.lesson.update({
+    where: {
+      id: id,
+    },
+    data: {
+      title: title,
+      learningObjective: learningObjective,
+    },
+  });
+  // revalidatePath("/courses/", "layout");
+  revalidatePath(`/courses/${id}, layout`);
+  return NextResponse.json({page});
+}
 
 export async function DELETE(req: NextRequest, res: NextResponse) {
   const {id} = await req.json();
@@ -41,5 +49,6 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
       id: id,
     },
   });
+  revalidatePath("/courses/[lessons]", "layout");
   return NextResponse.json({page});
 }

@@ -1,51 +1,49 @@
-// type Props = {
-//     children: React.ReactNode
-// }
-
 import Link from "next/link";
-import style from "./NavBar.module.css";
 
 export default function NavBar() {
   return (
-    <nav className={style.navStyle}>
-      {/* <h1>placeholder nav</h1> */}
-      <ul className={style.ulStyle}>
-        <li className={style.liSpacing}>
-          <Link className={style.linkStyle} href={"/"}>
-            home
-          </Link>
-        </li>
-        <li className={style.liSpacing}>
-          <Link className={style.linkStyle} href={"/LessonPlans"}>
-            lesson plans
-          </Link>
-        </li>
-        {/* <li className={style.liSpacing}>
-          <Link className={style.linkStyle} href={"/createLessonPlan"}>
-            createLessonPlan
-          </Link>
-        </li> */}
-        {/* <li className={style.liSpacing}>
-          <Link className={style.linkStyle} href={"/Pagination"}>
-            Pagination
-          </Link>
-        </li> */}
-        {/* <li className={style.liSpacing}>
-          <Link className={style.linkStyle} href={"/createLessons"}>
-            Create Lessons
-          </Link>
-        </li> */}
-        <li className={style.liSpacing}>
-          <Link className={style.linkStyle} href={"/createContent"}>
-            Create Content
-          </Link>
-        </li>
-        <li className={style.liSpacing}>
-          <Link className={style.linkStyle} href={"/manageContent"}>
-            manageContent
-          </Link>
-        </li>
-      </ul>
-    </nav>
+    <div>
+      <details className="dropdown mb-32 md:hidden">
+        <summary className="m-1 btn">Menu</summary>
+        <ul className="p-2 shadow menu dropdown-content z-[1] bg-gray-300 rounded-box w-52">
+          <li className="">
+            <Link className=" link-primary" href={"/"}>
+              Home
+            </Link>
+          </li>
+          <li className="">
+            <Link className=" link-primary" href={"/courses"}>
+              Courses
+            </Link>
+          </li>
+          <li className="">
+            <Link className=" link-primary" href={"/create/lessonPlan"}>
+              Create Content
+            </Link>
+          </li>
+        </ul>
+      </details>
+      <nav className="dropdown hidden md:inline-flex navbar border-b">
+        <div className="navbar-center ">
+          <ul className="menu hidden md:inline-flex md:menu-horizontal  px-1">
+            <li className="">
+              <Link className=" link-primary" href={"/"}>
+                Home
+              </Link>
+            </li>
+            <li className="">
+              <Link className=" link-primary" href={"/courses"}>
+                Courses
+              </Link>
+            </li>
+            <li className="">
+              <Link className=" link-primary" href={"/create/lessonPlan"}>
+                Create Content
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
   );
 }

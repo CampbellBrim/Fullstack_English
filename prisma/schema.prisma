@@ -31,7 +31,7 @@ enum Role {
 
 model LessonPlan {
   id          String   @id @default(uuid())
-  title       String
+  title       String   @default("Placeholder Title")
   level       String
   description String   @default("an english lesson")
   lessons     Lesson[]
@@ -45,7 +45,7 @@ model LessonPlan {
 // improve data model
 model Lesson {
   id                String      @id @default(uuid())
-  title             String
+  title             String      @default("Placeholder Title")
   content           Page[]
   learningObjective String      @default("learn verbs, nouns, adjectives, etc.")
   createdAt         DateTime    @default(now())
@@ -60,8 +60,11 @@ model Page {
   id        String   @id @default(uuid())
   title     String
   content   Json[]
+  order     Int      @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   lesson    Lesson   @relation(fields: [lessonId], references: [id])
   lessonId  String
 }
+
+// update this to be an array ofInput?

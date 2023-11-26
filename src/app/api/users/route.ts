@@ -1,35 +1,25 @@
-// import {prisma} from "@/lib/prisma";
-// import  {prisma } from "../../../lib/prisma";
 import prisma from "../../../../prisma/db";
-import {NextResponse} from "next/server";
+import {NextResponse, NextRequest} from "next/server";
+import {revalidatePath} from "next/cache";
 
-// export async function GET(request: Request) {
 export async function GET() {
-  // const users = await prisma.user.findMany();
-  const LessonPLans = await prisma.lessonPlan.findMany();
-  // return NextResponse.json(users);
-  // return NextResponse.json(LessonPLans);
-  return LessonPLans;
+  const users = await prisma.user.findMany();
+  return NextResponse.json({users});
 }
 
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const json = await request.json();
+    const {userName, email} = await req.json();
 
     const user = await prisma.user.create({
-      data: json,
+      data: {
+        userName: userName,
+        email: email,
+      },
     });
-
-    return new NextResponse(JSON.stringify(user), {
-      status: 201,
-      headers: {"Content-Type": "application/json"},
-    });
-  } catch (error: any) {
-    if (error.code === "P2002") {
-      return new NextResponse("User with email already exists", {
-        status: 409,
-      });
-    }
-    return new NextResponse(error.message, {status: 500});
+    revalidatePath("/users", "layout");
+    return NextResponse.json({user});
+  } catch (error) {
+    console.error(error);
   }
 }

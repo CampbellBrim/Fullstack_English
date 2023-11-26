@@ -1,32 +1,36 @@
 "use client";
 
 import {useRef} from "react";
-import {useStore} from "@/store";
+import {useLessonPlanStore} from "@/store";
 
-type Input = {
-  [key: string]: string;
-};
+// type Input = {
+//   [key: string]: string;
+// };
 
-export default function StoreInitializer({
-  title,
-}: // inputsArray,
-// content,
-{
+// const lessonPlans = {
+//   id: "string",
+//   title: "string",
+//   level: "string",
+//   description: "string",
+//   createdAt: "" as unknown as Date,
+//   updatedAt: "" as unknown as Date,
+//   authorId: "string",
+// };
+type lessonPlans = {
+  id: string;
   title: string;
-  // inputsArray: Input[];
-  // content: string[];
-}) {
+  level: string;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+  authorId: string;
+};
+export default function StoreInitializer(lessons: {lessons: lessonPlans}) {
   const initialized = useRef(false);
+  const lessonPlans = lessons.lessons;
   if (!initialized.current) {
-    useStore.setState({
-      title,
-      // inputsArray,
-      content: [],
-      pages: [],
-      //   content: ["stuff"],
-    });
+    useLessonPlanStore.setState({lessonPlans: [lessonPlans]});
     initialized.current = true;
   }
-
   return null;
 }

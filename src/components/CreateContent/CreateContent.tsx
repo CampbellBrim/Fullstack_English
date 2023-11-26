@@ -1,173 +1,390 @@
 "use client";
 
-// import {use} from "react";
-// should this just be a server side component?
+import {useState} from "react";
 
-import style from "./CreateContent.module.css";
-// import prisma from '../../../prisma/db'
-import {useStore} from "@/store";
-import DOMPurify from "dompurify";
-// import image from "../../public/Imagem do WhatsApp de 2023-09-04 à(s) 01.47.16.jpg";
+import {
+  DeleteSvg,
+  EditSvg,
+  BackSvg,
+  ForwardSvg,
+  DraggableSvg,
+} from "../../../public/svgs.js";
 
-enum InputType {
-  h1 = "h1",
-  h2 = "h2",
-  Paragraph = "Paragraph",
-  Image = "Image",
-  Option = "Option",
-  Content = "Content",
-}
+import "react-toastify/dist/ReactToastify.css";
+import {ToastContainer} from "react-toastify";
+import Toast from "../Toast/Toast";
 
-type Inputs = {
-  [key: string]: InputType;
-};
-
-type CreateFormProps = Inputs[];
+import {useRouter} from "next/navigation";
 
 type Props = {
-  inputs: CreateFormProps;
   lessonsToChooseFrom: any;
 };
-
 export default function CreateContent(props: Props) {
-  // add new pece of state to  control the content in the input field
-  // also add another for image descriptions
-  const title = useStore((state) => state.title);
-  const addToArray = useStore((state) => state.addToArray);
-  const contentType = useStore((state) => state.contentType);
-  const content = useStore((state) => state.content);
-  const activeLesson = useStore((state) => state.activeLesson);
+  const router = useRouter();
 
-  const lessonsToChooseFrom = props.lessonsToChooseFrom;
+  // const checkIfh1AlreadyExists = () => {
+  //   const h1Exists = widgets.some((widget) => {
+  //     return widget.hasOwnProperty("h1");
+  //   });
+  //   return h1Exists;
+  // };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    useStore.setState({title: value});
-  };
+  const initialState = [
+    {h1: "Drag your content onto the page!"},
+    {h2: "Click the pink edit button to edit text"},
+    {p: "Click the yellow delete button to delete an element from the page"},
+    {p: "Click save to save the page to your lesson"},
+  ];
+  const [widgets, setWidgets] = useState<{}[]>(initialState);
 
-  const addContent = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // const content = useStore((state) => state.content);
-    const value = useStore.getState().title;
-    // const content = useStore.getState().content;
-    const purifiedValue = DOMPurify.sanitize(value);
-    // `lorem <b onmouseover="alert('mouseover');">ipsum</b>`;
-    `lorem <b onmouseover="alert('mouseover');">ipsum</b>`;
-    // const JsonContent = JSON.stringify({[contentType]: title});
-    // const JsonContent = JSON.stringify({[contentType]: purifiedValue});
-    const contentToSend = {[contentType]: purifiedValue};
-    addToArray(contentToSend);
-  };
+  const {lessonsToChooseFrom} = props;
 
-  const ResetContent = (e: React.MouseEvent<HTMLButtonElement>) => {
-    useStore.setState({content: []});
-  };
+  const [title, setTitle] = useState("");
+  const [chosenLesson, setChosenLesson] = useState("");
+  // const [alreadyh1, setAlreadyh1] = useState(checkIfh1AlreadyExists());
+  const [sideBarOpen, setSideBarOpen] = useState(true);
 
-  const handleContentType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    useStore.setState({contentType: value});
+  const addWidget = (type: string) => {
+    const newWidgets: {}[] = [...widgets];
+    newWidgets.push({[`${type}`]: "Press pink button to edit text"});
+    setWidgets(newWidgets);
   };
 
   const handleLesson = (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault();
     const value = e.target.value;
-    useStore.setState({activeLesson: value});
-    // console.log(value);
-    // const stateValue = useStore.getState().activeLesson;
-    // console.log(stateValue);
-    // useStore.setState({ lesson: value });
+    setChosenLesson(value);
   };
 
-  const submitData = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  // const checkIfIdAlreadyExists = (id: string) => {
+  //   const idExists = widgets.some((widget) => {
+  //     return widget.hasOwnProperty(id);
+  //   });
+  //   return idExists;
+  // };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    // const JsonContent = JSON.stringify({contentType: content});
-    // console.log(JsonContent);
+  };
+
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+    e.dataTransfer.setData("text/plain", e.currentTarget.id);
+    e.dataTransfer.setData("type", e.currentTarget.innerText);
+  };
+
+  const changeSidebar = () => {
+    setSideBarOpen(!sideBarOpen);
+  };
+
+  const handleOnPageDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    const sourceIndex = Number(e.dataTransfer.getData("text/plain"));
+    const targetIndex = Number(e.currentTarget.id);
+    const newWidgets = [...widgets];
+    const [removedWidget] = newWidgets.splice(sourceIndex, 1);
+    newWidgets.splice(targetIndex, 0, removedWidget);
+    setWidgets(newWidgets);
+  };
+
+  const newDropHandler = (e: React.DragEvent<HTMLDivElement>) => {
+    const sourceIndex = e.dataTransfer.getData("text/plain");
+    if (sourceIndex === "new") {
+      const type = e.dataTransfer.getData("type");
+      addWidget(type);
+    }
+    return;
+  };
+
+  const removeWidget = (index: number) => {
+    const newWidgets = [...widgets];
+    newWidgets.splice(index, 1);
+    setWidgets(newWidgets);
+    // if (!checkIfh1AlreadyExists()) {
+    //   setAlreadyh1(false);
+    // }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+    key: string,
+    index: number
+  ) => {
+    const value = e.target.value;
+    const newWidgets = [...widgets];
+    newWidgets[index] = {[`${key}`]: value};
+    setWidgets(newWidgets);
+  };
+
+  const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    let response;
     try {
       const body = {
         title: title,
-        content: content,
-        lessonId: activeLesson,
+        content: widgets,
+        lessonId: chosenLesson,
       };
-      await fetch("/api/pages", {
+      response = await fetch("/api/pages", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(body),
       });
     } catch (error) {
       console.error(error);
+    } finally {
+      Toast(response!.status);
+      setWidgets(initialState);
+      router.refresh();
     }
   };
-  const inputs = props.inputs;
 
-  if (activeLesson.length === 0) {
-    useStore.setState({activeLesson: lessonsToChooseFrom[0].id});
+  if (chosenLesson.length === 0) {
+    setChosenLesson(lessonsToChooseFrom[0].id);
   }
 
   return (
-    <>
-      <div className="Form">
-        <div className={style.selectLessonContainer}>
-          <label>choose lesson to add page to</label>
-          <br />
-          <select onChange={handleLesson}>
-            {lessonsToChooseFrom.map((input: any, index: any, array: any) => {
-              return (
-                <option key={input.id} value={input.id}>
-                  Title: {input.title}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <label>Choose Type of Content For Page</label>
-        <br />
-        <select onChange={handleContentType} value={contentType}>
-          <option value="h1">h1</option>
-          <option value="h2">h2</option>
-          <option value="Paragraph">Paragraph</option>
-          <option value="Image">Image</option>
-        </select>
-        <br />
-        <form>
-          {inputs.map((input, index, array) => {
-            let key;
-            key = Object.keys(input);
-            if (input[`${key}`] === "h1") {
-              return (
-                <div key={index}>
-                  <label htmlFor={`${key}`}>Enter Content Here</label>
-                  <br />
-                  <input
-                    id={key.toString()}
-                    // id={index.toString()}
-                    type="text"
-                    // name={key}
-                    onChange={handleChange}
-                    placeholder={"Text"}
-                  />
-                  <br />
-                </div>
-              );
-            }
-          })}
-        </form>
-        <button className="button primary" onClick={addContent}>
-          Add Content
-        </button>
-        <br />
-        <button className="button warning" onClick={ResetContent}>
-          Reset Content
-        </button>
-        <br />
-        <button className="button primary" onClick={submitData}>
-          Submit Data
-        </button>
-
-        <div>
-          <p>title: {title}</p>
-          <p>content: {JSON.stringify(content)}</p>
-          <p>active lesson id: {activeLesson}</p>
+    <div className="flex flex-row">
+      <ToastContainer position="top-center" />
+      <div className="flex flex-col w-fit rounded-md">
+        <div className="flex flex-col w-fit bg-slate-300  px-1 rounded-md height519">
+          <button
+            className={`${sideBarOpen ? "" : "w-fit"} btn btn-accent  mt-1`}
+            onClick={changeSidebar}>
+            {sideBarOpen ? BackSvg : ForwardSvg}
+          </button>
+          <div
+            className={`${sideBarOpen ? "flex flex-col" : " invisible w-0"}`}>
+            <label className="font-bold" htmlFor="lessonId">
+              Choose a lesson
+            </label>
+            <select
+              className="select marginBottom-7 select-bordered w-40"
+              name="lessonId"
+              id="lessonId"
+              onChange={handleLesson}>
+              {lessonsToChooseFrom.map((input: any) => {
+                return (
+                  <option key={input.id} value={input.id}>
+                    {input.title}
+                  </option>
+                );
+              })}
+            </select>
+            <br />
+            <label className="font-bold" htmlFor="title">
+              Enter title for page
+            </label>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              className="input input-bordered w-40"
+              placeholder="Enter title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <br />
+            <label className="font-bold first-letter:capitalize" htmlFor="new">
+              Drag content onto page
+            </label>
+            <div
+              id="new"
+              className={
+                "py-1 my-1 cursor-grab rounded-md flex flex-row bg-slate-50"
+              }
+              draggable
+              onDragStart={handleDragStart}>
+              <p className="py-2 px-4 w-full text-center">h1</p>
+              <div className=" flex flex-row justify-end rounded-md p-1">
+                <div className="w-fit pr-1">{DraggableSvg}</div>
+              </div>
+            </div>
+            <div
+              id="new"
+              className={
+                "py-1 my-1 cursor-grab rounded-md flex flex-row bg-slate-50"
+              }
+              draggable
+              onDragStart={handleDragStart}>
+              <p className="py-2 px-4 w-full text-center">h2</p>
+              <div className=" flex flex-row justify-end rounded-md p-1">
+                <div className="w-fit pr-1">{DraggableSvg}</div>
+              </div>
+            </div>
+            <div
+              id="new"
+              className={
+                "py-1 my-1 cursor-grab rounded-md flex flex-row bg-slate-50"
+              }
+              draggable
+              onDragStart={handleDragStart}>
+              <p className="py-2 px-4 w-full text-center">p</p>
+              <div className="flex flex-row justify-end rounded-md p-1">
+                <div className="w-fit pr-1">{DraggableSvg}</div>
+              </div>
+            </div>
+            <button className="btn btn-primary mb-1" onClick={handleSave}>
+              Save
+            </button>
+          </div>
         </div>
       </div>
-    </>
+      <div
+        className="w-full minHeight-90vh"
+        onDrop={newDropHandler}
+        onDragOver={handleDragOver}>
+        <div className="flex flex-col w-full alignItemsCenter">
+          <div className="prose">
+            {widgets.map((widget, index) => {
+              const key = Object.keys(widget);
+              const value: string[] = Object.values(widget);
+              //
+              if (key[0] === "h1") {
+                return (
+                  <div
+                    className="flex flex-col dropdown dropdown-bottom cursor-grab"
+                    key={index}
+                    id={index.toString()}
+                    draggable
+                    onDragStart={handleDragStart}
+                    onDrop={handleOnPageDrop}
+                    onDragOver={handleDragOver}>
+                    <div
+                      className="flex flex-col sm:flex-row hoverBorder mt-2 alignItemsCenter p-2"
+                      key={index}>
+                      <div className="w-full">
+                        <h1 className="pr-2 alignItemsCenter mb-0">
+                          {value[0]}
+                        </h1>
+                      </div>
+                      <div className="flex flex-row ">
+                        <label
+                          tabIndex={index}
+                          className="btn btn-secondary"
+                          // onClick={() => editWidget(index, key[0])}
+                        >
+                          {EditSvg}
+                        </label>
+                        <button
+                          className="btn btn-warning"
+                          onClick={() => removeWidget(index)}>
+                          {DeleteSvg}
+                        </button>
+                        <div className="btn bg-transparent cursor-grab">
+                          {DraggableSvg}
+                        </div>
+                      </div>
+                    </div>
+                    <input
+                      tabIndex={index}
+                      className="input input-bordered dropdown-content z-[1]"
+                      type="text"
+                      defaultValue={value[0]}
+                      onChange={(e) => handleChange(e, key[0], index)}
+                    />
+                  </div>
+                );
+                //
+                //
+                //
+              } else if (key[0] === "h2") {
+                return (
+                  <div
+                    className="flex flex-col dropdown dropdown-bottom cursor-grab"
+                    id={index.toString()}
+                    key={index}
+                    draggable
+                    onDragStart={handleDragStart}
+                    onDrop={handleOnPageDrop}
+                    onDragOver={handleDragOver}
+
+                    //
+                  >
+                    <div
+                      className="flex flex-col sm:flex-row hoverBorder mt-2 alignItemsCenter p-2"
+                      key={index}>
+                      <div className="w-full">
+                        <h2 className="pr-2 alignItemsCenter mb-0 mt-0">
+                          {value[0]}
+                        </h2>
+                      </div>
+                      <div className="flex flex-row">
+                        <label
+                          tabIndex={index}
+                          className="btn btn-secondary"
+                          // onClick={() => editWidget(index, key[0])}
+                        >
+                          {EditSvg}
+                        </label>
+                        {/* <button
+                      className="btn btn-accent"
+                      onClick={() => editWidget(index, key[0])}>
+                      {EditSvg}
+                    </button> */}
+                        <button
+                          className="btn btn-warning"
+                          onClick={() => removeWidget(index)}>
+                          {DeleteSvg}
+                        </button>
+                        <div className="btn bg-transparent cursor-grab">
+                          {DraggableSvg}
+                        </div>
+                      </div>
+                    </div>
+                    <input
+                      tabIndex={index}
+                      className="input input-bordered dropdown-content z-[1]"
+                      type="text"
+                      defaultValue={value[0]}
+                      onChange={(e) => handleChange(e, key[0], index)}
+                    />
+                  </div>
+                );
+                //
+              } else if (key[0] === "p") {
+                return (
+                  <div
+                    className="flex flex-col dropdown dropdown-bottom cursor-grab"
+                    id={index.toString()}
+                    key={index}
+                    draggable
+                    onDragStart={handleDragStart}
+                    onDrop={handleOnPageDrop}
+                    onDragOver={handleDragOver}>
+                    <div
+                      className="flex flex-col sm:flex-row hoverBorder mt-2 alignItemsCenter p-2"
+                      key={index}>
+                      <div className="w-full">
+                        <p className="pr-2">{value[0]}</p>
+                      </div>
+
+                      <div className="flex flex-row">
+                        <label tabIndex={index} className="btn btn-secondary">
+                          {EditSvg}
+                        </label>
+                        <button
+                          className="btn btn-warning"
+                          onClick={() => removeWidget(index)}>
+                          {DeleteSvg}
+                        </button>
+                        <div className="btn bg-transparent cursor-grab w-fit h-fit">
+                          {DraggableSvg}
+                        </div>
+                      </div>
+                    </div>
+                    <textarea
+                      tabIndex={index}
+                      className="w-full textarea textarea-bordered dropdown-content z-[1]"
+                      defaultValue={value[0]}
+                      onChange={(e) =>
+                        handleChange(e, key[0], index)
+                      }></textarea>
+                  </div>
+                );
+              }
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -14,9 +14,7 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
-      <StoreInitializer title="arg that goes into initializer component" />
       <body className={inter.className}>
-        {/* <body> */}
         <NavBar />
         {children}
       </body>
