@@ -6,7 +6,7 @@ export default async function Page() {
     let response;
     try {
       // response = await fetch("http://localhost:3000/api/users/", {
-      response = await fetch(`${process.env.BASE_URL}/api/users/`, {
+      response = await fetch(`/${process.env.BASE_URL}/api/users/`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       });
