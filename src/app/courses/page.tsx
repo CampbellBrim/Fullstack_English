@@ -36,8 +36,8 @@ export default async function Page() {
     let response;
     try {
       // response = await fetch("http://localhost:3000/api/courses", {
-      // response = await fetch(`${process.env.BASE_URL}/api/courses`, {
-      response = await fetch("/api/courses", {
+      response = await fetch(`${process.env.BASE_URL}/api/courses`, {
+        // response = await fetch("/api/courses", {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       });
