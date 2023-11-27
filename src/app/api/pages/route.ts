@@ -57,27 +57,29 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
   return NextResponse.json({page});
 }
 
-export async function GET(
-  req: NextRequest,
-  {params}: {params: {lessonId: string}}
-) {
-  const lessonId = params.lessonId;
-  let lesson;
-  try {
-    lesson = await prisma.lesson.findUnique({
-      where: {
-        id: lessonId,
-      },
-      include: {
-        content: {
-          orderBy: {
-            order: "asc",
-          },
-        },
-      },
-    });
-  } catch (error) {
-    console.error(error);
-  }
-  return lesson;
-}
+// export async function GET(
+//   req: NextRequest,
+//   {params}: {params: {lessonId: string}}
+// ) {
+//   const lessonId = params.lessonId;
+//   let lesson;
+//   try {
+//     lesson = await prisma.lesson.findUnique({
+//       where: {
+//         id: lessonId,
+//       },
+//       include: {
+//         content: {
+//           orderBy: {
+//             order: "asc",
+//           },
+//         },
+//       },
+//     });
+//   } catch (error) {
+//     console.error(error);
+//   }
+//   // return lesson;
+
+//   return NextResponse.json({lesson});
+// }
