@@ -6,8 +6,8 @@ export default async function Page() {
     let response;
     try {
       // response = await fetch("http://localhost:3000/api/users/", {
-      response = await fetch(`/api/users/`, {
-        // response = await fetch(`${process.env.BASE_URL}/api/users/`, {
+      // response = await fetch(`/api/users/`, {
+      response = await fetch(`${process.env.BASE_URL}/api/users/`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       });
@@ -20,11 +20,14 @@ export default async function Page() {
   const users = await fetchData();
   //   userName: string;
   //   id: string;
-  return (
-    <div className="flex flex-col">
-      {users.users.map((user: any, index: number) => {
-        return <Users key={index} userName={user.userName} id={user.id} />;
-      })}
-    </div>
-  );
+  if (users) {
+    return (
+      <div className="flex flex-col">
+        {users.users.map((user: any, index: number) => {
+          return <Users key={index} userName={user.userName} id={user.id} />;
+        })}
+      </div>
+    );
+  }
+  return <div>nothing here yet</div>;
 }
