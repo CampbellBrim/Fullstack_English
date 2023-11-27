@@ -57,7 +57,10 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
   return NextResponse.json({page});
 }
 
-export async function GET({params}: {params: {lessonId: string}}) {
+export async function GET(
+  req: NextRequest,
+  {params}: {params: {lessonId: string}}
+) {
   const lessonId = params.lessonId;
   let lesson;
   try {
