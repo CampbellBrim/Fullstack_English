@@ -1,4 +1,5 @@
 import Users from "@/components/Users/Users";
+import {usePathname} from "next/navigation";
 
 export default async function Page() {
   const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
@@ -10,8 +11,8 @@ export default async function Page() {
     try {
       // response = await fetch("http://localhost:3000/api/users/", {
       // response = await fetch(`/api/users/`, {
-      // response = await fetch("/api/users/", {
-      response = await fetch(`${BASE_URL}/api/users`, {
+      response = await fetch("api/users/", {
+        // response = await fetch(`${BASE_URL}/api/users`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       });
