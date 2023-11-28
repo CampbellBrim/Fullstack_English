@@ -1,9 +1,14 @@
 import Users from "@/components/Users/Users";
 import {usePathname} from "next/navigation";
+import {headers} from "next/headers";
 
 export default async function Page() {
   const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
   console.log("BASE_URL: ", BASE_URL);
+
+  const headersList = headers();
+  const pathname = headersList.get("x-invoke-path");
+  console.log("pathname: ", pathname);
 
   const fetchData = async () => {
     let data;
@@ -12,7 +17,7 @@ export default async function Page() {
       // response = await fetch("http://localhost:3000/api/users/", {
       // response = await fetch(`/api/users/`, {
       // response = await fetch("api/users/", {
-      response = await fetch(`${BASE_URL}/api/users`, {
+      response = await fetch(`${pathname}/api/users`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       });
