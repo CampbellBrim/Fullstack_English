@@ -79,7 +79,7 @@ export default async function Page() {
         </h1>
         <div className="flex justify-start">
           <div className="flex flex-wrap w-fit flex-col">
-            {course!.map((course: CourseType) => (
+            {course.map((course: CourseType) => (
               <Course key={course.id} lesson={course} />
             ))}
           </div>
