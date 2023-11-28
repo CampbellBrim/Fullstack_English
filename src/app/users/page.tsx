@@ -39,5 +39,5 @@ export default async function Page() {
       </div>
     );
   }
-  return <div>nothing here yet</div>;
+  return <div>pathname: {pathname}</div>;
 }
