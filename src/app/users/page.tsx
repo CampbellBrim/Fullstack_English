@@ -20,17 +20,16 @@ export default async function Page() {
     return data;
   };
   const users = await fetchData();
-  console.log(users);
   //   userName: string;
   //   id: string;
-  // if (users) {
-  return (
-    <div className="flex flex-col">
-      {users.users.map((user: any, index: number) => {
-        return <Users key={index} userName={user.userName} id={user.id} />;
-      })}
-    </div>
-  );
-  // }
-  // return <div>nothing here yet</div>;
+  if (users) {
+    return (
+      <div className="flex flex-col">
+        {users.users.map((user: any, index: number) => {
+          return <Users key={index} userName={user.userName} id={user.id} />;
+        })}
+      </div>
+    );
+  }
+  return <div>nothing here yet</div>;
 }
