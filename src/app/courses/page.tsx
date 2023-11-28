@@ -71,21 +71,21 @@ export default async function Page() {
   };
 
   const {course}: FetchType = await fetchData();
-  if (!course) {
-    return <div>nothing here yet</div>;
-  }
-  return (
-    <div className="">
-      <h1 className="text-3xl capitalizeFirst w-full text-center block">
-        Courses
-      </h1>
-      <div className="flex justify-start">
-        <div className="flex flex-wrap w-fit flex-col">
-          {course!.map((course: CourseType) => (
-            <Course key={course.id} lesson={course} />
-          ))}
+  if (course) {
+    return (
+      <div className="">
+        <h1 className="text-3xl capitalizeFirst w-full text-center block">
+          Courses
+        </h1>
+        <div className="flex justify-start">
+          <div className="flex flex-wrap w-fit flex-col">
+            {course!.map((course: CourseType) => (
+              <Course key={course.id} lesson={course} />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
+  return <div>nothing here yet</div>;
 }
