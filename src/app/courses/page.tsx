@@ -30,14 +30,13 @@ export default async function Page() {
       }
     ];
   };
-
+  const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
   const fetchData = async () => {
     let data;
     let response;
     try {
       // response = await fetch("http://localhost:3000/api/courses", {
-      response = await fetch(`${process.env.BASE_URL}/api/courses`, {
-        // response = await fetch("/api/courses", {
+      response = await fetch(`${BASE_URL}/api/courses/`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       });

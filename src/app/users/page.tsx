@@ -1,13 +1,15 @@
 import Users from "@/components/Users/Users";
 
 export default async function Page() {
+  const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
+
   const fetchData = async () => {
     let data;
     let response;
     try {
       // response = await fetch("http://localhost:3000/api/users/", {
       // response = await fetch(`/api/users/`, {
-      response = await fetch(`${process.env.BASE_URL}/api/users/`, {
+      response = await fetch(`${BASE_URL}/api/users/`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       });
@@ -18,16 +20,17 @@ export default async function Page() {
     return data;
   };
   const users = await fetchData();
+  console.log(users);
   //   userName: string;
   //   id: string;
-  if (users) {
-    return (
-      <div className="flex flex-col">
-        {users.users.map((user: any, index: number) => {
-          return <Users key={index} userName={user.userName} id={user.id} />;
-        })}
-      </div>
-    );
-  }
-  return <div>nothing here yet</div>;
+  // if (users) {
+  return (
+    <div className="flex flex-col">
+      {users.users.map((user: any, index: number) => {
+        return <Users key={index} userName={user.userName} id={user.id} />;
+      })}
+    </div>
+  );
+  // }
+  // return <div>nothing here yet</div>;
 }
