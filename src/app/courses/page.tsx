@@ -31,17 +31,39 @@ export default async function Page() {
     ];
   };
   const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
+  // const fetchData = async () => {
+  //   let data;
+  //   let response;
+  //   try {
+  //     // response = await fetch("http://localhost:3000/api/courses", {
+  //     response = await fetch(`${BASE_URL}/api/courses`, {
+  //       method: "GET",
+  //       headers: {"Content-Type": "application/json"},
+  //     });
+  //     data = await response.json();
+  //     useLessonPlanStore.setState({lessonPlans: [data]});
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  //   return data;
+  // };
   const fetchData = async () => {
     let data;
-    let response;
     try {
-      // response = await fetch("http://localhost:3000/api/courses", {
-      response = await fetch(`${BASE_URL}/api/courses/`, {
+      // const response = await fetch(`http://localhost:3000/api/courses`, {
+      const response = await fetch(`${BASE_URL}/api/courses`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       });
-      data = await response.json();
-      useLessonPlanStore.setState({lessonPlans: [data]});
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const text = await response.text();
+      try {
+        data = JSON.parse(text);
+      } catch {
+        console.error("Received data is not JSON: ", text);
+      }
     } catch (error) {
       console.error(error);
     }
