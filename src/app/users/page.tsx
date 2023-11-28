@@ -52,13 +52,16 @@ export default async function Page() {
   }
   return (
     // <div>
-    //   <div>pathname: {JSON.stringify(pathname)}</div>
     //   <div>
     //     <p>BASE_URL: {JSON.stringify(BASE_URL)}</p>
     //     <p>BASE_URL: {JSON.stringify(typeof BASE_URL)}</p>
     //     <p>BASE_URL: {JSON.stringify(headersList.keys())}</p>
     //   </div>
     // </div>
-    <div>nothing here yet</div>
+    <div>
+      <div>pathname: {JSON.stringify(pathname)}</div>
+
+      <div>nothing here yet</div>
+    </div>
   );
 }
