@@ -6,7 +6,7 @@ import {LessonPlan as CourseType} from "@prisma/client";
 import {useLessonPlanStore} from "@/store";
 
 export default async function Page() {
-  type ReturnType = {
+  type FetchType = {
     course: [
       {
         id: string;
@@ -48,7 +48,10 @@ export default async function Page() {
     return data;
   };
 
-  const {course}: ReturnType = await fetchData();
+  const {course}: FetchType = await fetchData();
+  if (!course) {
+    return <div>nothing here yet</div>;
+  }
   return (
     <div className="">
       <h1 className="text-3xl capitalizeFirst w-full text-center block">
