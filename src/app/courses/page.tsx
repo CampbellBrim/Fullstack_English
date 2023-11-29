@@ -76,7 +76,7 @@ export default async function Page() {
 
   // const {course}: FetchType = await fetchData();
   const course: FetchType = await fetchData();
-  if (course !== undefined) {
+  if (course !== undefined && course !== null) {
     return (
       <div className="">
         <h1 className="text-3xl capitalizeFirst w-full text-center block">
