@@ -50,7 +50,7 @@ export default async function Page() {
   //     </div>
   //   );
   // }
-  if (users.status === 200) {
+  if (users !== undefined && users !== null) {
     return (
       <div className="flex flex-col">
         {users.users.map((user: any, index: number) => {
