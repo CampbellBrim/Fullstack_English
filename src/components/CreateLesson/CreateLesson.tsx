@@ -54,6 +54,7 @@ export default function CreateLesson(props: Props) {
         body: JSON.stringify(body),
       });
     } catch (error) {
+      console.log(response?.text());
       console.error(error);
     } finally {
       Toast(response!.status);

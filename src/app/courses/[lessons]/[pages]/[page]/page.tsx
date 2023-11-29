@@ -22,6 +22,7 @@ export default async function Page({params}: Params) {
       // response = await fetch(`http://localhost:3000/api/pages/${lessonId}/`, {
       response = await fetch(
         // `${process.env.BASE_URL}/api/pages/${lessonId}/`, {
+        // https://fullstack-english.vercel.app/api/courses
         `https://${pathname}/api/pages/${lessonId}/`,
         {
           method: "GET",

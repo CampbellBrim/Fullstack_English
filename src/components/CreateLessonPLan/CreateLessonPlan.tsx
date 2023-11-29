@@ -48,12 +48,13 @@ export default function CreateLessonPlan() {
         level: level,
         description: description,
       };
-      response = await fetch("/api/courses/", {
+      response = await fetch("/api/courses", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(body),
       });
     } catch (error) {
+      // console.log(response?.body);
       console.error(error);
     } finally {
       Toast(response!.status);
