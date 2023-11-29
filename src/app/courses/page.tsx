@@ -3,7 +3,6 @@ import Course from "@/components/Course/Course";
 // import {Prisma} from "@prisma/client";
 import {LessonPlan as CourseType} from "@prisma/client";
 import {headers} from "next/headers";
-// import {GET} from "../api/courses/route";
 import {useLessonPlanStore} from "@/store";
 
 export default async function Page() {
