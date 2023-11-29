@@ -41,7 +41,16 @@ export default async function Page() {
   const users = await fetchData();
   //   userName: string;
   //   id: string;
-  if (users) {
+  // if (users) {
+  //   return (
+  //     <div className="flex flex-col">
+  //       {users.users.map((user: any, index: number) => {
+  //         return <Users key={index} userName={user.userName} id={user.id} />;
+  //       })}
+  //     </div>
+  //   );
+  // }
+  if (users.status === 200) {
     return (
       <div className="flex flex-col">
         {users.users.map((user: any, index: number) => {
@@ -50,6 +59,7 @@ export default async function Page() {
       </div>
     );
   }
+
   return (
     // <div>
     //   <div>
