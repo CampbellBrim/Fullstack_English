@@ -2,16 +2,20 @@ import {Prisma} from "@prisma/client";
 import prisma from "../../../../prisma/db";
 import LessonComponent from "@/components/Lesson/LessonComponent";
 import {Lesson as LessonType} from "@prisma/client";
+import {headers} from "next/headers";
 // import { usePathname } from "next/navigation";
 
 export default async function Page({params}: {params: {lessons: string}}) {
+  const headersList = headers();
+  const pathname = headersList.get("x-forwarded-host");
   const fetchData = async (lessonId: string) => {
     let data;
     let response;
     try {
       // response = await fetch(`http://localhost:3000/api/courses/${lessonId}/`, {
       response = await fetch(
-        `${process.env.BASE_URL}/api/courses/${lessonId}/`,
+        // `${process.env.BASE_URL}/api/courses/${lessonId}/`,
+        `https://${pathname}/api/courses/${lessonId}/`,
         {
           method: "GET",
           headers: {"Content-Type": "application/json"},
@@ -26,6 +30,7 @@ export default async function Page({params}: {params: {lessons: string}}) {
   const lessons: {lessons: LessonType[]} = await fetchData(params.lessons);
 
   if (lessons.lessons.length === 0) {
+    // if (lessons !== undefined && lessons !== null) {
     return (
       <div className="flex w-full justify-center">
         <h1 className="w-fit alignSelfCenter text-3xl py-1">No Lessons</h1>
