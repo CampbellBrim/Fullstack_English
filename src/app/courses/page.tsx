@@ -2,6 +2,7 @@ import Course from "@/components/Course/Course";
 // import prisma from "../../../prisma/db";
 // import {Prisma} from "@prisma/client";
 import {LessonPlan as CourseType} from "@prisma/client";
+import {headers} from "next/headers";
 // import {GET} from "../api/courses/route";
 import {useLessonPlanStore} from "@/store";
 
@@ -47,11 +48,14 @@ export default async function Page() {
   //   }
   //   return data;
   // };
+  const headersList = headers();
+  const pathname = headersList.get("x-forwarded-host");
+
   const fetchData = async () => {
     let data;
     try {
       // const response = await fetch(`http://localhost:3000/api/courses`, {
-      const response = await fetch(`${BASE_URL}/api/courses`, {
+      const response = await fetch(`https://${pathname}/api/courses`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
       });
