@@ -1,9 +1,9 @@
 import prisma from "../../../../prisma/db";
 import {NextRequest, NextResponse} from "next/server";
-import {revalidatePath, revalidateTag} from "next/cache";
+import {revalidatePath} from "next/cache";
 
 export async function POST(req: NextRequest, res: NextResponse) {
-  const {title, authorId, learningObjective, lessonPlan} = await req.json();
+  const {title, learningObjective, lessonPlan} = await req.json();
 
   const page = await prisma.lesson.create({
     data: {
@@ -27,7 +27,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
 export async function PUT(req: NextRequest, res: NextResponse) {
   const {id, title, learningObjective} = await req.json();
-  // const { id, title, content } = await req.json();
   const page = await prisma.lesson.update({
     where: {
       id: id,
@@ -37,7 +36,6 @@ export async function PUT(req: NextRequest, res: NextResponse) {
       learningObjective: learningObjective,
     },
   });
-  // revalidatePath("/courses/", "layout");
   revalidatePath(`/courses/${id}, layout`);
   return NextResponse.json({page});
 }

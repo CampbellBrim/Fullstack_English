@@ -6,7 +6,6 @@ import {revalidatePath} from "next/cache";
 import {useLessonPlanStore as lessonPlanStoreType} from "@/store";
 
 export async function GET() {
-  // const {updateLessonPlans} = useLessonPlanStore();
   const course = await prisma.lessonPlan.findMany({
     include: {
       lessons: true,
@@ -17,7 +16,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest, res: NextResponse) {
-  const {title, level, authorId, description} = await req.json();
+  const {title, level, description} = await req.json();
 
   const page = await prisma.lessonPlan.create({
     data: {
@@ -26,8 +25,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
       description: description,
       author: {
         connect: {
-          // id: authorId,
-          // id: authorId,
           id: process.env.AUTHOR_ID,
         },
       },
@@ -35,13 +32,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
   });
   revalidatePath("/courses/", "layout");
   return NextResponse.json({page});
-  // return NextResponse.next()
 }
 
-// update list of lessons
 export async function PUT(req: NextRequest, res: NextResponse) {
   const {id, title, description, level} = await req.json();
-  // const { id, title, content } = await req.json();
   const page = await prisma.lessonPlan.update({
     where: {
       id: id,

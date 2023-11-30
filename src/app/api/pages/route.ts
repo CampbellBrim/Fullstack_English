@@ -1,9 +1,6 @@
 import prisma from "../../../../prisma/db";
 import {NextRequest, NextResponse} from "next/server";
 import {revalidatePath} from "next/cache";
-import {useRouter} from "next/navigation";
-
-// const router = useRouter();
 
 export async function POST(req: NextRequest, res: NextResponse) {
   const {title, lessonId, content} = await req.json();
@@ -15,7 +12,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
       lesson: {
         connect: {
           id: lessonId,
-          // id: env()
         },
       },
     },
@@ -41,7 +37,6 @@ export async function PUT(req: NextRequest, res: NextResponse) {
     },
   });
   revalidatePath("/courses/[lessons]", "layout");
-  // router.refresh();
 
   return NextResponse.json({page});
 }
@@ -56,30 +51,3 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
   revalidatePath("/courses/[lessons]", "layout");
   return NextResponse.json({page});
 }
-
-// export async function GET(
-//   req: NextRequest,
-//   {params}: {params: {lessonId: string}}
-// ) {
-//   const lessonId = params.lessonId;
-//   let lesson;
-//   try {
-//     lesson = await prisma.lesson.findUnique({
-//       where: {
-//         id: lessonId,
-//       },
-//       include: {
-//         content: {
-//           orderBy: {
-//             order: "asc",
-//           },
-//         },
-//       },
-//     });
-//   } catch (error) {
-//     console.error(error);
-//   }
-//   // return lesson;
-
-//   return NextResponse.json({lesson});
-// }

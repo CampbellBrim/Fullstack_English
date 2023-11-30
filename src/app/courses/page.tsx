@@ -1,9 +1,6 @@
 import Course from "@/components/Course/Course";
-// import prisma from "../../../prisma/db";
-// import {Prisma} from "@prisma/client";
 import {LessonPlan as CourseType} from "@prisma/client";
 import {headers} from "next/headers";
-import {useLessonPlanStore} from "@/store";
 
 export default async function Page() {
   type FetchType = {
@@ -30,30 +27,13 @@ export default async function Page() {
       }
     ];
   };
-  const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
-  // const fetchData = async () => {
-  //   let data;
-  //   let response;
-  //   try {
-  //     // response = await fetch("http://localhost:3000/api/courses", {
-  //     response = await fetch(`${BASE_URL}/api/courses`, {
-  //       method: "GET",
-  //       headers: {"Content-Type": "application/json"},
-  //     });
-  //     data = await response.json();
-  //     useLessonPlanStore.setState({lessonPlans: [data]});
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  //   return data;
-  // };
+
   const headersList = headers();
   const pathname = headersList.get("x-forwarded-host");
 
   const fetchData = async () => {
     let data;
     try {
-      // const response = await fetch(`http://localhost:3000/api/courses`, {
       const response = await fetch(`https://${pathname}/api/courses`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
@@ -73,7 +53,6 @@ export default async function Page() {
     return data;
   };
 
-  // const {course}: FetchType = await fetchData();
   const course: FetchType = await fetchData();
   if (course !== undefined && course !== null) {
     return (
